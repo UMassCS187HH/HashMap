@@ -17,6 +17,7 @@ import org.junit.Test;
 
 public class HashTest {
 	private LLHashMap<String> hm;
+	private LLHashMap<String> ha;
 	ArrayList<String> strings = new ArrayList<String>();
 	@Before
 	public void before() {
@@ -31,31 +32,30 @@ public class HashTest {
 		for(String s: strings){
 			hm.put(s);
 		}
-	}
-	
-	public void alternateBefore(){
 		Scanner sc;
+		ha = new LLHashMap<String>();
+		String s = "";
 		try {
 			sc = new Scanner(new File("words.txt"));
 			while (sc.hasNext()) {
 				String line = sc.nextLine();
-				int last = 0;
-				int i = 0;
-				while(i < line.length()){
-					if(line.charAt(i) == ' '){
-						hm.put(line.substring(last, i+1));
-						last = i + 1;
-					}
-					i++;
-				}
+				s += line;
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		System.out.println(hm.get("a"));
+		String[] words = s.split("\\s+");
+		for (int i = 0; i < words.length; i++) {
+		    // You may want to check for a non-word character before blindly
+		    // performing a replacement
+		    // It may also be necessary to adjust the character class
+		    words[i] = words[i].replaceAll("[^\\w]", "");
+		}
+		for(String a: words)
+			ha.put(a);
 	}
+	
 	
 	@Test
 	public void test(){
@@ -64,5 +64,13 @@ public class HashTest {
 		hm.put("bob");
 		assertEquals(1, hm.get("bob"));
 		assertEquals(-1, hm.get("not"));
+	}
+	
+	@Test
+	public void testHM(){
+		assertEquals(21, ha.get("a"));
+		assertEquals(66, ha.get("the"));
+		assertEquals(1, ha.get("be"));
+		assertTrue(true);
 	}
 }
